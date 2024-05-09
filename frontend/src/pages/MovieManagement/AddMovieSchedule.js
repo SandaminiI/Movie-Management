@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import AdminMovieMenu from '../../components/Layout/AdminMovieMenu';
-//import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 import { Select } from 'antd';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LayoutAdmin from './../../components/Layout/LayoutAdmin';
 
@@ -49,6 +48,21 @@ const AddMovieSchedule = () => {
     }
 
     try {
+      // Check if there is any existing schedule that overlaps with the selected time period
+      const existingSchedules = await axios.get(`http://localhost:8080/api/v1/movieschedule/get-schedule-date/${date}`);
+      const overlappingSchedule = existingSchedules.data.movieSchedules.find(schedule => {
+        const scheduleStartTime = new Date(`${date}T${schedule.from}`);
+        const scheduleEndTime = new Date(`${date}T${schedule.to}`);
+        const newStartTime = new Date(`${date}T${from}`);
+        const newEndTime = new Date(`${date}T${to}`);
+        return (newStartTime >= scheduleStartTime && newStartTime < scheduleEndTime) || (newEndTime > scheduleStartTime && newEndTime <= scheduleEndTime);
+      });
+
+      if (overlappingSchedule) {
+        toast.error('A schedule already exists for the selected time period');
+        return;
+      }
+
       const movieScheduleData = new FormData();
       movieScheduleData.append('date', date);
       movieScheduleData.append('from', from);
@@ -108,25 +122,26 @@ const AddMovieSchedule = () => {
   };
 
   return (
-    <LayoutAdmin title={"AddMovieSchedule"}>
+    <LayoutAdmin>
     <div className="container-fluid m-4 p-3">
       <div className="row">
         <div className="col-md-3">
           <AdminMovieMenu />
         </div>
         <div className="col-md-9 ">
-          <h3 className="text-center">Schedule Movie Showtime</h3>
+          <h3 className="text-center"><legend>Schedule Movie Showtime</legend></h3>
 
           <div className="m-1 w-75 ">
             <label>Select a date :</label>
             <div className="mb-3">
-              <input
-                type="date"
-                value={date}
-                placeholder="date"
-                className={`form-control ${errors.date && 'is-invalid'}`}
-                onChange={(e) => setDate(e.target.value)}
-              />
+            <input
+              type="date"
+              value={date}
+              min={new Date().toISOString().split('T')[0]} // Set min attribute to current date
+              placeholder="date"
+              className={`form-control ${errors.date && 'is-invalid'}`}
+              onChange={(e) => setDate(e.target.value)}
+            />
               {errors.date && <div className="invalid-feedback">{errors.date}</div>}
             </div>
 
@@ -180,7 +195,13 @@ const AddMovieSchedule = () => {
                 value={unavailableSeats}
                 placeholder="Unavailable seats"
                 className="form-control"
-                onChange={(e) => setUnavailableSeats(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // Check if the input contains only numbers and commas
+                  if (/^[0-9,]*$/.test(value)) {
+                    setUnavailableSeats(value); // Set the value if it contains only numbers and commas
+                  }
+                  }}
               />
             </div>
 
@@ -194,7 +215,7 @@ const AddMovieSchedule = () => {
           </div>
         </div>
       </div>
-      <ToastContainer />
+      <Toaster />
     </div>
     </LayoutAdmin>
   );
