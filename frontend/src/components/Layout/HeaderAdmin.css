@@ -1,0 +1,65 @@
+.header {
+    background-color: #22335e; /* Dark blue background color */
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 8px 6px -6px gray;
+    --webkit-box-shadow: 0 8px 6px -6px gray;
+    border-bottom: 0.3px solid gray;
+  }
+  
+  .logo h1 {
+    color: #ffffff; /* White text color */
+    margin: 0;
+  }
+  .top-nav-bar {
+    font-size: 17px;
+    line-height: 26px;
+    text-transform: capitalize;
+  }
+  
+  .top-nav-bar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+  
+  .top-nav-bar ul li {
+    margin-right: 20px;
+  }
+  
+  .top-nav-bar ul li:last-child {
+    margin-right: 0;
+  }
+  
+  .top-nav-bar ul li a {
+    color: #ffffff; /* White text color */
+    text-decoration: none;
+    padding: 5px 5px;
+  }
+  
+  .top-nav-bar ul li a:hover {
+    text-decoration: underline;
+    background-color: #3a4d85; /* Darker blue on hover */
+  }
+  
+  .top-nav-bar ul li.active a:hover::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #3a4d85; /* Darker blue on hover */ /* White underline color */
+  }
+  .active {
+    background-color: #3a4d85; /* White background color */
+    border-bottom: 2px solid rgb(255, 255, 255);
+  }
+  
+  .active a {
+    color: #22335e; /* Blue text color */
+    text-decoration: underline;
+  }
