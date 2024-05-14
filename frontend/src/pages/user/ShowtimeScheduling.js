@@ -34,15 +34,17 @@ const ShowtimeScheduling = () => {
         <Layout title={"ShowTimes"}>
             <div className='container-fluid m-3 p-3'>
                 <div className='row'>
-                    <h3 className="text-center">Movie Showtimes</h3><br/>
+                <h1 style={{ fontSize: "24px", fontWeight: "bold", textAlign: "center", marginBottom: "20px" }}>Showtime Schedule</h1>
+                    <br/>
                     <div className='col-md-10 mx-auto '>
                         <div className="mb-3">
                             <label className="form-label"><h5>Select Your Preferred Date:</h5></label>
                             <DatePicker
-                                value={selectedDate}
-                                onChange={(date) => setSelectedDate(date)}
-                                dateFormat="yyyy-MM-dd"
-                                className="form-control"
+                              value={selectedDate}
+                              onChange={(date) => setSelectedDate(date)}
+                              dateFormat="yyyy-MM-dd"
+                              minDate={new Date()}
+                              className="form-control"
                             />
                         </div>
                         <br /><br />
